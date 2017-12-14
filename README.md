@@ -1,7 +1,7 @@
 # CountCat
 
 CountCat performs a quick and dirty analysis of lines of SPARC Solaris C-source code and tries to determine the effort required in porting to a Linux based system.  During the analysis of the source code, ccat will flag any areas that may be of concern during the porting of the code.
-
+---
 ## Why CountCat?
 
 Was tasked by a friend who a quick script to cat a file and count elements inside. It became this, and with the lack of a better name, it stuck.  He passed away a few years ago, and the name will stay.
