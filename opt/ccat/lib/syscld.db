@@ -1,0 +1,11 @@
+futimesat
+getdents
+llseek
+mount
+readv
+unlinkat
+umount
+utime
+utimes
+waitid
+writev

@@ -1,0 +1,10 @@
+fstat
+getmsg
+getpmsg
+lstat
+msgctl
+msgget
+msgrcv
+msgsnd
+open
+stat

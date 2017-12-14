@@ -1,0 +1,11 @@
+pthread_mutexattr_getrobust_np
+pthread_mutexattr_setrobust_np
+pthread_mutex_realtimedlock_np
+pthread_rwlock_realtimedlock_np
+pthread_rwlock_realtimedwrlock_np
+thr_continue
+thr_getconcurrency
+thr_main
+thr_min_stack
+thr_setconcurrency
+thr_suspend

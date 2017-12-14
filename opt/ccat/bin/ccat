@@ -1,0 +1,717 @@
+#!/bin/ksh
+# CCAT
+# =============================================================================
+# CCAT analyses a Solaris C source code tree, and tries to determine the effort
+#  required in porting the code to Linux.           
+#  
+#  See VERSION for full version information 
+#                                            Andrew Prowse aprowse@highvail.com
+# 
+#                                                         Solaris/Linux Version
+
+# Variables
+
+LANG=C;export LANG
+NAME=`basename "$0"`
+CCOUNT=0
+CFILECOUNT=0
+CHF=0
+CTOTCOUNT=0
+BASE=/opt/HVccat
+LIB=$BASE/lib
+DB=$BASE/hdrdb  
+VERSION=`head -n 1 $BASE/VERSION | awk '{print $1 }'`
+VERSIONDATE=`head -n 1 $BASE/VERSION | awk '{print $2 }'`
+RPT=ccat.html
+DRPT=ccat_detail.html
+CSV=ccat.csv
+CSV_TMP=/tmp/ccat_csv.tmp
+FONT="<font face=Verdana size=1>"
+HCOUNT=0
+HFILECOUNT=0
+HTOTCOUNT=0
+IHF=0
+RPT=ccat.html
+SHF=0
+TMPCALL=0
+TMPCOUNT=0
+TMPFILE1=/tmp/ccat_tmp1
+TMPFILE2=/tmp/ccat_tmp2
+TMPFILE3=/tmp/ccat_tmp3
+CCCOUNTsh=0
+CCCOUNTbash=0
+CCCOUNTksh=0
+CCCOUNTcsh=0
+CCCOUNTtcsh=0
+CCCOUNTperl=0
+OS=`uname -s`
+
+if [ "$OS" = "SunOS" ]; then
+   # Solaris signals
+   trap "purge; echo \"$NAME: User interrupt\"; exit 1" 1 2 3 15
+else
+   # Linux signals
+   trap "purge; echo \"$NAME: Unexpected signal\"; exit 1" 4 5 6 7 8 10 11 12 13 14 16 22 28 29 30 31
+fi
+PATH=/bin:/usr/bin:/usr/sbin:/sbin:$PATH
+export PATH
+
+init(){
+
+   OS=`uname -s`
+   if [ -z "$OS" ]; then
+      OS='Unknown ('`uname -a | sed "s/.* //"`')'
+   fi
+
+   PROC=`uname -p`
+   if [ -z "$PROC" ]; then
+      PROC='Unknown ('`uname -a | sed "s/.* //"`')'
+   fi
+
+   CLASS="`uname -m 2>/dev/null`"
+   if [ -z "$CLASS" ]; then
+      CLASS='Unknown ('`uname -a | sed "s/.* //"`')'
+   fi
+
+   PLATFORM="`uname -i 2>/dev/null`"
+   if [ -z "$PLATFORM" ]; then
+      PLATFORM='Unknown ('`uname -a | sed "s/.* //"`')'
+   fi
+
+   OS_VER=`uname -r`
+   if [ -z "$OS_VER" ]; then
+      OS_VER='Unknown ('`uname -a | sed "s/.* //"`')'
+   fi
+   if [ "$OS" = "SunOS" ]; then
+      # ##################################
+      # Solaris-specific
+      # ##################################
+      GREPQ="grep"
+      echo "GREPQ=$GREPQ"
+
+   else
+      # ##################################
+      # Linux-specific (includes CYGWIN)
+      # Linux Defaults for PLAT_TYPE and PLATFORM
+      # (Cygwin: uname -i = unknown, so using uname -m for PLATFORM)
+      # For non-Solaris, reset PLATFORM to uname -m as default
+      # (For Solaris, we keep default PLATFORM name as uname -i)
+      # ##################################
+      PLATFORM=$CLASS
+      PLAT_TYPE="Intel x86 PC"
+      GREPQ="grep -q"
+   fi
+}
+
+
+dblline(){
+   echo ============================================================================== 
+}
+
+clnup(){
+   if [ -f $TMPFILE1 ] ; then
+      rm $TMPFILE1
+   fi
+   if [ -f $TMPFILE2 ] ; then
+      rm $TMPFILE2
+   fi
+   if [ -f $TMPFILE3 ] ; then
+      rm $TMPFILE3
+   fi
+   TMPCALL=0; TMPCOUNT=0
+}
+
+purge(){
+for i in tmp hdr hdr0 hdr1 hdr2 hfiles cfiles scripts sh bash ksh csh tcsh perl; do
+   if [ -f ccat.$i ] ; then
+      rm ccat.$i
+   fi
+done   
+}
+
+build_library(){
+   if [ ! -f $DB/hdrdb.src ] ; then
+      while true ; do
+         echo "Which release of Solaris is the source from?"
+         echo "  a) Solaris  7"
+         echo "  b) Solaris  8"
+         echo "  c) Solaris  9"
+         echo "  d) Solaris 10"
+         echo "  e) Solaris 11"
+         echo
+         echo -n "Enter a, b, c, d, e: "
+         read source
+         case $source in
+         a)
+            ln -s $DB/hdrdb.s07 $DB/hdrdb.src
+            break
+            ;;
+         b)
+            ln -s $DB/hdrdb.s08 $DB/hdrdb.src
+            break
+            ;;
+         c)
+            ln -s $DB/hdrdb.s09 $DB/hdrdb.src
+            break
+            ;;
+         d)
+            ln -s $DB/hdrdb.s10 $DB/hdrdb.src
+            break
+            ;;
+         e)
+            ln -s $DB/hdrdb.s11 $DB/hdrdb.src
+            break
+            ;;
+         *)
+            echo "Invalid source, please enter again"
+            ;;
+         esac
+      done
+   fi
+
+   if [ ! -f $DB/hdrdb.tgt ] ; then
+      while true ; do
+         echo "What is the target platform?"
+         echo "  a) RedHat 4"
+         echo "  b) RedHat 5"
+         echo "  c) RedHat 6"
+         echo "  d) RedHat 7"
+         echo "  e) SUSE 10"
+         echo "  z) Generate data from this system"
+         echo
+         echo -n "Enter a,b,c,d,z: "
+         read source
+         case $source in
+         a)
+            ln -s $DB/hdrdb.rh4 $DB/hdrdb.tgt
+            break
+            ;;
+         b)
+            ln -s $DB/hdrdb.rh5 $DB/hdrdb.tgt
+            break
+            ;;
+         c)
+            ln -s $DB/hdrdb.rh6 $DB/hdrdb.tgt
+            break
+            ;;
+         d)
+            ln -s $DB/hdrdb.rh7 $DB/hdrdb.tgt
+            break
+            ;;
+         e)
+            ln -s $DB/hdrdb.suse10 $DB/hdrdb.tgt
+            break
+            ;;
+         z)
+            (cd /usr/include/ ; find . -type f | cut -c 3-200 >$DB/hdrdb.tgt)
+            break
+            ;;
+         *)
+            echo "Invalid target, please enter again"
+            ;;
+         esac
+      done
+   fi
+
+
+   # Check for complete header database files.  This is the old create_db script
+
+   for i in son ton cmn ; do
+      if [ ! -f $DB/hdrdb.$i ]; then
+         printf "\n\n::: Header database files need to be created.\n"
+         printf " :: Cleaning up stale files (if any)\n"
+         for i in son ton cmn ; do
+            if [ -f $DB/hdrdb.$i ]; then
+               rm $DB/hdrdb.$i
+            fi
+         done
+         printf " :: Creating common header database"
+         for i in src tgt ; do
+            if [ ! -f $DB/hdrdb.$i ]; then
+                printf "\n\n  : Missing Header DB dependancy, please check install.\n"
+                exit
+            fi
+         done
+         cat $DB/hdrdb.src $DB/hdrdb.tgt | sort | uniq -d >> $DB/hdrdb.cmn
+         echo " ... done"
+         printf " :: Creating source specific header database"
+         for i in `cat $DB/hdrdb.src` ; do 
+            if ! $GREPQ $i $DB/hdrdb.tgt  > /dev/null; then  
+               echo $i >> $DB/hdrdb.son
+            fi
+         done
+         echo " ... done"
+         printf " :: Creating target specific header database"
+         for i in `cat $DB/hdrdb.tgt` ; do 
+            if ! $GREPQ $i $DB/hdrdb.src  > /dev/null; then  
+               echo $i >> $DB/hdrdb.ton
+            fi
+         done
+         echo " ... done"
+      fi
+   done
+   for i in son ton cmn ; do
+      if [ ! -f $DB/hdrdb.$i ]; then
+         printf "\n\n::: Error creating databasees, please chck installation\n\n"
+         exit 2
+      fi
+   done
+}
+
+build_headers(){
+   touch ccat.hdr		# Just in case it's not there
+   
+   # Shuffling the chairs on the Titanic, except it magically creates
+   # the Solaris/Linux/Supplied header data
+
+   for i in `cat ccat.hdr`; do 
+      if $GREPQ $i ccat.tmp > /dev/null
+         then echo $i >> $TMPFILE1
+      fi
+   done
+   if [ -f $TMPFILE1 ]; then
+      uniq < $TMPFILE1 > ccat.hdr0
+      rm $TMPFILE1
+   fi
+   for i in `cat $DB/hdrdb.cmn`; do 
+      if $GREPQ $i ccat.tmp > /dev/null
+         then echo $i >> $TMPFILE1
+      fi
+   done
+   if [ -f $TMPFILE1 ] ; then
+      uniq < $TMPFILE1 > ccat.hdr1
+      rm $TMPFILE1
+   fi
+   for i in `cat $DB/hdrdb.son`; do 
+      if $GREPQ $i ccat.tmp > /dev/null
+         then echo $i >> $TMPFILE1
+      fi
+   done
+   if [ -f $TMPFILE1 ]; then
+      uniq < $TMPFILE1 > ccat.hdr2
+   fi
+   clnup
+   for i in 0 1 2 ; do
+      if [ -f ccat.hdr$i ] ; then
+         cat ccat.hdr$i >> $TMPFILE1
+      fi
+   done
+   
+   # If for some mysteriuos reason, certain header database are unpopulated
+   # touch them to make sure they exist
+
+   touch ccat.hdr0 ccat.hdr1 ccat.hdr2
+   KHF=`cat $TMPFILE1 | wc -l`
+   IHF=`cat ccat.hdr0 | wc -l`
+   CHF=`cat ccat.hdr1 | wc -l`
+   SHF=`cat ccat.hdr2 | wc -l`
+}
+
+major(){
+   # Performs the pattern matching for the more complicated search
+   clnup
+   echo "---------------------"  >> $DRPT
+   grep $OPTION"1" $LIB/messages.db | cut -c 10- >> $DRPT
+   echo "---------------------"  >> $DRPT
+   LIBFILE=`grep $OPTION"2" $LIB/messages.db | cut -c 10-`
+   for i in `cat ccat.cfiles` ; do
+      for j in `cat $LIB/$LIBFILE` ; do
+          if grep " "$j"(" $i > /dev/null
+             then echo $i >> $TMPFILE1
+             echo $j >> $TMPFILE2
+             TMPCALL=1
+             echo "::: File $i " >> $DRPT
+             echo " :: Call $j() " >> $DRPT
+             echo "  : Line(s):" >> $DRPT
+             grep -n  $j"(" $i > $TMPFILE3
+             cat $TMPFILE3 | tee -a $DRPT > $CSV_TMP
+             # cat $TMPFILE3 | sed -e 's/[\t]*//g' | tee -a $DRPT > $CSV_TMP # BUSTED
+             echo "..." >> $DRPT
+             # Create CSV file for later data interpretation
+             CSV_LINES=`cat $CSV_TMP | wc -l`
+             CSV_COUNT=0
+             while [ "$CSV_COUNT" -lt "$CSV_LINES" ] ; do
+                CSV_COUNT=`expr $CSV_COUNT + 1`
+                CSV_LINE=`cat $CSV_TMP | head -$CSV_COUNT |tail -1 | cut -d":" -f 1`
+                CSV_STRING=`cat $CSV_TMP | head -$CSV_COUNT |tail -1 | cut -d":" -f 2`
+                # CSV_STRING=`cat $CSV_TMP | head -$CSV_COUNT |tail -1 | cut -d":" -f 2 | sed 's/^[ \t]*//'` # BUSTED
+                echo "$j---$i---$CSV_LINE---$CSV_STRING" >> $CSV
+             done
+          fi
+      done
+   done
+
+   if [ $TMPCALL -eq 1 ] ; then
+      TMPCOUNT=` cat $TMPFILE1 | sort | uniq | wc -l`
+      MSG=`grep $OPTION"3" $LIB/messages.db | cut -c 10-`
+      printf "$MSG \n" $TMPCOUNT
+      printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+      printf "<TR style=\"background:#eee;\"><TD>$FONT<B>`grep $OPTION"4" $LIB/messages.db | cut -c 10-`</TD><TD ALIGN=RIGHT>$FONT<B> $TMPCOUNT</TD></TR>\n" >> $RPT
+      printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+      printf "<TR style=\"background:#efe;\"><TD colspan=\"2\">$FONT `grep $OPTION"5" $LIB/messages.db | cut -c 10-`</TD></TR>\n" >> $RPT
+      printf "<TR style=\"background:#eee;\"><TD colspan=\"2\">$FONT<B>`grep $OPTION"6" $LIB/messages.db | cut -c 10-`</TD></TR>\n" >> $RPT
+      printf "<TR><TD colspan=\"2\">$FONT" >> $RPT
+      for i in `cat $TMPFILE2 | sort | uniq` ; do
+         printf " $i()" >> $RPT
+      done
+      printf "</TD></TR>\n" >> $RPT
+      printf "<TR style=\"background:#eee;\"><TD colspan=\"2\">$FONT<B>Files Affected:</B></TD></TR>\n" >> $RPT
+      for i in `cat $TMPFILE1 | sort | uniq ` ; do
+         printf "<TR><TD ALIGN=\"RIGHT\">$FONT $i</TD><TD></TD></TR>\n" >> $RPT
+      done
+   fi
+}
+
+minor(){
+   # Performs the pattern matching for the less complicated search
+   clnup
+   echo "---------------------" >> $DRPT
+   grep $OPTION"1" $LIB/messages.db | cut -c 10- >> $DRPT
+   echo "---------------------" >> $DRPT
+   LIBFILE=`grep $OPTION"2" $LIB/messages.db | cut -c 10-`
+   GREPTHIS=`grep $OPTION"3" $LIB/messages.db | cut -c 10-`
+   for i in `cat $LIBFILE` ; do
+      if $GREPQ $GREPTHIS $i > /dev/null
+         then echo $i >> $TMPFILE1
+         TMPCALL=1
+         TMPCOUNT=`(expr $TMPCOUNT + 1 )`
+         echo "::: File $i " >> $DRPT
+         echo "  : Line(s):" >> $DRPT
+         echo "`grep -n $GREPTHIS $i`" | tee -a $DRPT > $CSV_TMP
+         # echo "`grep -n $GREPTHIS $i`" | sed -e 's/[\t]*//g' | tee -a $DRPT > $CSV_TMP # BUSTED
+         echo "..." >> $DRPT
+         # Create CSV file for later data interpretation
+         CSV_LINES=`cat $CSV_TMP | wc -l`
+         CSV_COUNT=0
+         while [ "$CSV_COUNT" -lt "$CSV_LINES" ] ; do
+            CSV_COUNT=`expr $CSV_COUNT + 1`
+            CSV_LINE=`cat $CSV_TMP | head -$CSV_COUNT |tail -1 | cut -d":" -f 1`
+            CSV_STRING=`cat $CSV_TMP | head -$CSV_COUNT |tail -1 | cut -d":" -f 2`
+            # CSV_STRING=`cat $CSV_TMP | head -$CSV_COUNT |tail -1 | cut -d":" -f 2 | sed 's/^[ \t]*//'` # BUSTED
+            echo "$GREPTHIS---$i---$CSV_LINE---$CSV_STRING" >> $CSV
+         done
+      fi
+   done
+   if [ $TMPCALL -eq 1 ] ; then
+      MSG=`grep $OPTION"4" $LIB/messages.db | cut -c 10-`
+      printf "$MSG \n" $TMPCOUNT
+      printf "<TR style=\"background:#eee;\"><TD>$FONT<B>`grep $OPTION"5" $LIB/messages.db | cut -c 10-`</TD><TD ALIGN=RIGHT>$FONT<B> $TMPCOUNT</TD></TR>\n" >> $RPT
+      printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+      printf "<TR style=\"background:#efe;\"><TD colspan=\"2\">$FONT `grep $OPTION"6" $LIB/messages.db | cut -c 10-`</TD></TR>\n" >> $RPT
+      for i in `cat $TMPFILE1 | sort | uniq ` ; do
+         printf "<TR><TD ALIGN=\"RIGHT\">$FONT $i</TD><TD></TD></TR>\n" >> $RPT
+      done
+      printf "</TD></TR>\n" >> $RPT
+   fi
+}
+
+audit(){
+   # Start the source code audit
+   clear
+   printf "<HEAD>\n" > $RPT
+   printf "<title>FUJITSU</title>" >> $RPT
+   printf "<meta content=\"Copyright (C) FUJITSU\" name=\"copyright\" />" >> $RPT
+   printf "</HEAD>\n" >> $RPT
+   printf "<BODY><TABLE width=\"620\" cellpadding=\"1\" style=\"border:2px solid black;\" border=\"0\"><TR><TD><img src="logo.png"></TD>" >> $RPT
+   printf "<TD ALIGN=RIGHT>$FONT<B><I>Solaris to Linux C Source Analyser</B></I></TD></TR>" >> $RPT
+   printf "<TR><TD></TD><TD ALIGN=RIGHT>$FONT ccat version: $VERSION</TD></TR>" >> $RPT
+   printf "<TR><TD></TD><TD ALIGN=RIGHT>$FONT Report Run: `date`</TD></TR>" >> $RPT
+   printf "==============================================================================\n"
+   printf "H I G H V A I L   S Y S T E M S   I N C .                      C o u n t C a t\n"
+   printf "                                                          HVccat release $VERSION\n"
+   printf "                                                                    $VERSIONDATE\n"
+   printf "HighVail Migration Services             Run Date: `date`\n"
+   printf "==============================================================================\n"
+   printf "<TR><TD>$FONT System Information</TD><TD></TD></TR>\n" >> $RPT
+   printf "<TR><TD>$FONT Arch:</TD><TD>$FONT $PLATFORM</TD></TR>\n" >> $RPT
+   printf "<TR><TD>$FONT Operating System:</TD><TD>$FONT $OS $OS_VER</TD></TR>\n" >> $RPT
+   printf "<TR><TD>$FONT Source: </TD><TD>$FONT `pwd`</TD></TR>\n" >> $RPT
+   printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+   printf "<TR><TD>$FONT<B> C Files</B></TD><TD></TD></TR>\n" >> $RPT
+   printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+
+   for i in `find . -type f -name \*.h`; do
+      echo $i >> ccat.hfiles
+   done
+
+   # if there are no header files, which is valid, lets create a blank header list
+   touch ccat.hfiles
+
+   # carry on
+   for i in `find . -type f -name \*.c`; do
+      echo $i | sed 's/.\///' >> ccat.cfiles  # AZP
+      CCOUNT=`cat $i | wc -l`
+      CTOTCOUNT=`(expr $CTOTCOUNT + $CCOUNT )`
+      CFILECOUNT=`(expr $CFILECOUNT + 1 )`
+      CFILENAME=`basename $i`
+      grep "\.h" $i | grep include >> ccat.tmp
+      printf "<TR><TD ALIGN=RIGHT>$FONT $CFILENAME</TD><TD ALIGN=RIGHT>$FONT $CCOUNT</TD></TR>\n" >> $RPT
+   done
+
+   if [ ! -f ccat.cfiles ]; then
+      printf "\n\nThere were no C-Files in this directory or any sub-directory.  Please ensure\n"
+      printf " that you are in the base directory for the source code project that you are \n"
+      printf " trying to analyse. \n\n\n"
+      exit
+   fi
+
+   dblline
+   printf "<TR style=\"background:#ddd;\"><TD>$FONT Number of C files in the source tree:</TD><TD ALIGN=RIGHT>$FONT $CFILECOUNT</TD></TR>\n" >> $RPT
+   printf "<TR style=\"background:#ddd;\"><TD>$FONT Total number of lines of C code::</TD><TD ALIGN=RIGHT>$FONT $CTOTCOUNT</TD></TR>\n" >> $RPT
+   printf "Number of C files in the source tree:                        %10d\n" $CFILECOUNT
+   printf "Total number of lines of C code:                             %10d\n" $CTOTCOUNT
+   dblline
+   printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+   printf "<TR><TD>$FONT<B> Header Files</B></TD><TD></TD></TR>\n" >> $RPT
+   printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+
+   for i in `cat ccat.hfiles`; do
+      HCOUNT=`cat $i | wc -l`
+      HTOTCOUNT=`(expr $HTOTCOUNT + $HCOUNT )`
+      HFILECOUNT=`(expr $HFILECOUNT + 1 )`
+      grep "\.h" $i | grep include >> ccat.tmp
+      HFILENAME=`basename $i`
+      printf "<TR><TD ALIGN=RIGHT>$FONT $HFILENAME</TD><TD ALIGN=RIGHT>$FONT $HCOUNT</TD></TR>\n" >> $RPT
+      echo $HFILENAME >> ccat.hdr
+   done
+   printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+   printf "<TR style=\"background:#ddd;\"><TD>$FONT Number of header files in the source tree</TD><TD ALIGN=RIGHT>$FONT $HFILECOUNT</TD></TR>\n" >> $RPT
+   printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+   printf "<TR style=\"background:#ddd;\"><TD>$FONT Total number of lines of code in the header files</TD><TD ALIGN=RIGHT>$FONT $HTOTCOUNT</TD></TR>\n" >> $RPT
+   printf "Number of header files in the source tree:                   %10d\n" $HFILECOUNT
+   printf "Total number of lines of code in the header files:           %10d\n" $HTOTCOUNT
+   dblline
+   TF=`(expr  $CFILECOUNT + $HFILECOUNT )`
+   TL=`( expr $CTOTCOUNT + $HTOTCOUNT )`
+   
+   dblline
+   printf "<TR style=\"background:#ddd;\"><TD>$FONT<B> Total number of C code and header files</TD><TD ALIGN=RIGHT>$FONT<B> $TF</TD></TR>\n" >> $RPT
+   printf "<TR style=\"background:#ddd;\"><TD>$FONT<B> Total lines of code in above files</TD><TD ALIGN=RIGHT>$FONT<B> $TL</TD></TR>\n" >> $RPT
+   printf "Total number of C code and header files:                     %10d\n" $TF 
+   printf "Total lines of code in above files:                          %10d\n" $TL 
+   printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+   dblline
+}
+
+scripthunt(){
+   FLIST=ccat.scripts
+   SHCOUNT=0
+   BASHCOUNT=0
+   KSHCOUNT=0
+   CSHCOUNT=0
+   TCSHCOUNT=0
+   PERLCOUNT=0
+   SHTOTAL=0
+   BASHTOTAL=0
+   KSHTOTAL=0
+   CSHTOTAL=0
+   TCSHTOTAL=0
+   PERLTOTAL=0
+   echo Script Hunting:
+   for i in `find . -type f | sed 's/.\///' ` ; do
+      FIRSTLINE=`head -n 1 $i 2> /dev/null`
+      if echo $FIRSTLINE | grep "^#!" > /dev/null ; then
+         if echo $FIRSTLINE | grep "bin/sh" > /dev/null; then
+            echo "SH   " $i >> $FLIST
+            WC=`cat $i | wc -l`
+            SHTOTAL=`( expr $SHTOTAL + $WC )`
+            SHCOUNT=`( expr $SHCOUNT + 1 )`
+         elif echo $FIRSTLINE | grep "bash" > /dev/null; then
+            echo "BASH " $i  >> $FLIST
+            WC=`cat $i | wc -l`
+            BASHTOTAL=`( expr $BASHTOTAL + $WC )`
+            BASHCOUNT=`( expr $BASHCOUNT + 1 )`
+         elif echo $FIRSTLINE | grep "ksh" > /dev/null; then
+            echo "KSH  " $i  >> $FLIST
+            WC=`cat $i | wc -l`
+            KSHTOTAL=`( expr $KSHTOTAL + $WC )`
+            KSHCOUNT=`( expr $KSHCOUNT + 1 )`
+         elif echo $FIRSTLINE | grep "csh" > /dev/null; then
+            echo "csh  " $i  >> $FLIST
+            WC=`cat $i | wc -l`
+            CSHTOTAL=`( expr $CSHTOTAL + $WC )`
+            CSHCOUNT=`( expr $CSHCOUNT + 1 )`
+         elif echo $FIRSTLINE | grep "tcsh" > /dev/null; then
+            echo "tcsh " $i >> $FLIST
+            WC=`cat $i | wc -l`
+            TCSHTOTAL=`( expr $TCSHTOTAL + $WC )`
+            TCSHCOUNT=`( expr $TCSHCOUNT + 1 )`
+         elif echo $FIRSTLINE | grep -i perl > /dev/null; then
+            echo "PERL " $i  >> $FLIST
+            WC=`cat $i | wc -l`
+            PERLTOTAL=`( expr $PERLTOTAL + $WC )`
+            PERLCOUNT=`( expr $PERLCOUNT + 1 )`
+         fi
+      fi
+   done
+   printf "<TR style=\"background:#efe;\"><TD colspan=\"2\">$FONT<B> Scripts found within the source code.</B></TD></TR>\n" >> $RPT
+   printf "sh scripts   : %5d | total lines : %10d\n" $SHCOUNT $SHTOTAL
+   printf "<TR style=\"background:#efe;\"><TD ALIGN="RIGHT">$FONT SH Scripts : %5d</TD><TD ALIGN="RIGHT">$FONT Total Lines : %10d</TD></TR>" $SHCOUNT $SHTOTAL >> $RPT
+   printf "bash scripts : %5d | total lines : %10d\n" $BASHCOUNT $BASHTOTAL
+   printf "<TR style=\"background:#efe;\"><TD ALIGN="RIGHT">$FONT BASH Scripts : %5d</TD><TD ALIGN="RIGHT">$FONT Total Lines : %10d</TD></TR>" $BASHCOUNT $BASHTOTAL >> $RPT
+   printf "ksh scripts  : %5d | total lines : %10d\n" $KSHCOUNT $KSHTOTAL
+   printf "<TR style=\"background:#efe;\"><TD ALIGN="RIGHT">$FONT KSH Scripts : %5d</TD><TD ALIGN="RIGHT">$FONT Total Lines : %10d</TD></TR>" $KSHCOUNT $KSHTOTAL >> $RPT
+   printf "csh scripts  : %5d | total lines : %10d\n" $CSHCOUNT $CSHTOTAL
+   printf "<TR style=\"background:#efe;\"><TD ALIGN="RIGHT">$FONT CSH Scripts : %5d</TD><TD ALIGN="RIGHT">$FONT Total Lines : %10d</TD></TR>" $CSHCOUNT $CSHTOTAL >> $RPT
+   printf "tcsh scripts : %5d | total lines : %10d\n" $TCSHCOUNT $TCSHTOTAL
+   printf "<TR style=\"background:#efe;\"><TD ALIGN="RIGHT">$FONT TCSH Scripts : %5d</TD><TD ALIGN="RIGHT">$FONT Total Lines : %10d</TD></TR>" $TCSHCOUNT $TCSHTOTAL >> $RPT
+   printf "perl scripts : %5d | total lines : %10d\n" $PERLCOUNT $PERLTOTAL
+   printf "<TR style=\"background:#efe;\"><TD ALIGN="RIGHT">$FONT PERL Scripts : %5d</TD><TD ALIGN="RIGHT">$FONT Total Lines : %10d</TD></TR>" $PERLCOUNT $PERLTOTAL >> $RPT
+   printf "\nScript information in script_detail\n"
+   echo "<PRE>" > script_detail.html
+   if [ -f $FLIST ] ; then
+      sort $FLIST >> script_detail.html
+   else 
+      echo "No scripts found" >> script_detail.html
+   fi
+   echo "</PRE>" >> script_detail.html
+   printf "<TR style=\"background:#efe;\"><TD colspan=\"2\" ALIGN=\"CENTER\">$FONT Please see <a href=\"script_detail.html\">script_detail.html</a> for a complete list of scripts found.</TD></TR>\n" >> $RPT
+}
+
+# ####################################
+# MAIN
+# ####################################
+
+# Clean up any stale temporary files.
+purge
+
+# Handle any command line arguments
+case "$1" in
+   quick)
+      audit
+      clnup
+      purge
+      exit
+      ;;
+   script)
+      scripthunt
+      clnup
+      purge
+      rm ccat.html
+      exit
+      ;;
+   clean)
+      for i in src tgt cmn son ton  ; do
+         if [ -f $DB/hdrdb.$i ] ; then
+            rm $DB/hdrdb.$i
+         fi
+      done   
+      ;;
+   reset)
+      for i in src tgt cmn son ton  ; do
+         if [ -f $DB/hdrdb.$i ] ; then
+            rm $DB/hdrdb.$i
+         fi
+      done   
+      echo Completed reset of installation.
+      exit
+      ;;
+   version)
+      echo "HVccat version `cat $BASE/etc/version`"
+      exit 0
+      ;;
+   help)
+      echo
+      echo " usage: ccat [clean|reset|quick|script|help]"
+      echo "    default (no optopns) will run a full scan on the"
+      echo "       source code in the current directory"
+      echo "    clean will run ccat as if it was freshlty installed"
+      echo "    reset will clean but not run ccat"
+      echo "    quick will run ccat line counting and exit"
+      echo "    script will run ccat script counting and exit"
+      echo "    help shows help screen"
+      echo "    show HVccat version and quit"
+      exit
+esac
+
+# Start by determining SPARC/x86/Solaris/Linux information
+init
+
+# Add source and target library
+build_library
+
+cp $BASE/lib/logo.png .			# copy HighVail logo over
+
+# Start the source code audit
+audit
+
+# Cleanup work files
+clnup
+build_headers
+
+printf "Headers referenced by the C code:                            %10d\n" $KHF
+printf "<TR style=\"background:#eee;\"><TD>$FONT<B>Headers referenced by the C code</TD><TD ALIGN=RIGHT>$FONT<B> $KHF</TD></TR>\n" >> $RPT
+if [ $IHF -gt 0 ]; then
+   printf "Headers included in the source code tree:                    %10d \n" $IHF
+   printf "<TR style=\"background:#eee;\"><TD>$FONT<B>Headers included in source code tree</TD><TD ALIGN=RIGHT>$FONT<B> $IHF</TD></TR>\n" >> $RPT
+   printf "<TR style=\"background:#efe;\"><TD colspan=\"2\">$FONT These header files were found in the source code tree. They should be checked for Linux compatibility</TD></TR>\n" >> $RPT
+   for i in `cat ccat.hdr0 | sort | uniq` ; do
+       printf "<TR><TD ALIGN=\"RIGHT\">$FONT $i</TD><TD></TD></TR>\n" >> $RPT
+   done
+fi
+if [ $CHF -gt 0 ]; then
+   printf "Common headers in Solaris and Linux:                         %10d \n" $CHF
+   printf "<TR style=\"background:#eee;\"><TD>$FONT<B>Common headers in Solaris and Linux</TD><TD ALIGN=RIGHT>$FONT<B> $CHF</TD></TR>\n" >> $RPT
+   printf "<TR style=\"background:#efe;\"><TD colspan=\"2\">$FONT These headers are common to both Linux and Solaris. They should be checked against the Migration Guide for Linux compatibility.</TD></TR>\n" >> $RPT
+   for i in `cat ccat.hdr1 | sort | uniq` ; do
+       printf "<TR><TD ALIGN=\"RIGHT\">$FONT $i</TD><TD></TD></TR>\n" >> $RPT
+   done
+fi
+
+if [ $SHF -gt 0 ] ; then
+   printf "Solaris only headers referenced by the source code:          %10d \n" $SHF
+   printf "<TR style=\"background:#eee;\"><TD>$FONT<B>Solaris only headers referenced by the source code</TD><TD ALIGN=RIGHT>$FONT<B> $SHF</TD></TR>\n" >> $RPT
+   printf "<TR style=\"background:#efe;\"><TD colspan=\"2\">$FONT These header files are in Solaris only.<BR>These need to be researched, and eitehr be modified for Linux, or a suitable replacement should be located.</TD></TR>\n" >> $RPT
+   for i in `cat ccat.hdr2 | sort | uniq` ; do
+      printf "<TR><TD ALIGN=\"RIGHT\">$FONT $i</TD><TD></TD></TR>\n" >> $RPT
+   done
+   dblline
+fi
+   echo "<pre>"  > $DRPT
+   echo "---------------------" >> $DRPT
+   echo "Solaris Only Headers"  >> $DRPT
+   echo "---------------------" >> $DRPT
+   for i in `cat ccat.cfiles` ; do
+      for j in `cat ccat.hdr2` ; do
+         if $GREPQ $j $i  > /dev/null; then
+            echo "::: File: $i " >> $DRPT
+            echo " :: Header file referenced: $j " >> $DRPT
+            echo "  : Line(s):" >> $DRPT
+            echo "`grep -n  $j $i`" >> $DRPT
+            # echo "`grep -n  $j $i`"| sed -e 's/[\t]*//g' >> $DRPT # BUSTED
+            echo "..." >> $DRPT
+         fi
+      done
+   done
+
+
+if [ -f $CSV ] ; then
+   rm $CSV
+fi
+for OPTION in `cat $LIB/major.db`; do 
+   major $OPTION
+done
+for OPTION in `cat $LIB/minor.db`; do 
+   minor $OPTION
+done
+dblline
+# Start the source code script hunting
+scripthunt
+echo "---------------------" >> $DRPT
+echo "Script Hunting      "  >> $DRPT
+echo "---------------------" >> $DRPT
+cat script_detail.html >> $DRPT
+
+# Clean up all temporary files
+purge  
+echo
+echo  ------------------------------------------------------------------------------ 
+echo "Please see $RPT and ccat.csv for more detail Copyright HighVail 2008-2014"
+echo  ------------------------------------------------------------------------------ 
+printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+printf "<TR style=\"background:#efe;\"><TD colspan=\"2\" ALIGN=\"CENTER\">$FONT see <a href=\"$DRPT\">$DRPT</a> for a more detailed analysis.</TD></TR>\n" >> $RPT
+printf "<TR style=\"background:#efe;\"><TD colspan=\"2\" ALIGN=\"CENTER\">$FONT see ccat.csv for spreadsheet use.</TD></TR>\n" >> $RPT
+printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
+printf "<TR style=\"background:#efe;\"><TD colspan=\"2\" ALIGN=\"RIGHT\">$FONT Copyright HighVail 2008-2014</TD></TR>\n" >> $RPT
+printf "</TABLE>\n" >> $RPT
+printf "</PRE>" >> $DRPT

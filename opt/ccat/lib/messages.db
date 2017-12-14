@@ -1,0 +1,132 @@
+SYSCALL1 Solaris System Calls
+SYSCALL2 syscl.db
+SYSCALL3 Files with Solaris Specific System Calls in code:            %10d
+SYSCALL4 Number of files with Solaris Specific System calls in code:
+SYSCALL5 The following systems calls are present in Solaris only. 
+SYSCALL6 Solaris Specific System Calls found in code:
+SYSCBSD1 Solaris System Calls
+SYSCBSD2 sysclbsd.db
+SYSCBSD3 Files with System Calls requiring the _BSD_SOUCRE macro:     %10d
+SYSCBSD4 Number of files with System Calls requiring the _BSD_SOUCRE macro in code:
+SYSCBSD5 These system calls require the inclision of the _BSD_SOURCE macro.  This macro can overide POSIX.1 definitions.
+SYSCBSD6 System Calls requiring the _BSD_SOUCRE macro:
+SYSC5001 Solaris System Calls
+SYSC5002 syscl500.db
+SYSC5003 Files with System Calls requiring the _XOPEN_SOUCRE macro:   %10d
+SYSC5004 Number of files with System calls requiring the _XOPEN_SOURCE=500 macro in code:
+SYSC5005 These system calls require the inclision of the _XOPEN_SOURCE=500 macro.  Please check for compatibility when adding new libraries.
+SYSC5006 System Calls requiring the _XOPEN_SOURCE=500 macro:
+SYSCALD1 Solaris System Calls
+SYSCALD2 syscld.db
+SYSCALD3 Files with System Calls requiring large modifications:       %10d
+SYSCALD4 Number of files with Solaris/Linux System calls that differ in code:
+SYSCALD5 The following systems calls differ greatly between Linux and Solaris.  Please check the manual pages for the format of the output.
+SYSCALD6 Solaris/Linux Differing System Calls found in code:
+SYSCASD1 Solaris System Calls
+SYSCASD2 sysclsd.db
+SYSCASD3 Files with System Calls requiring small modifications:       %10d
+SYSCASD4 Number of files with Solaris/Linux System calls with small differences in code:
+SYSCASD5 The following systems calls differ slightly between Linux and Solaris.  Please check the manual pages for the format of the output.
+SYSCASD6 Solaris/Linux Differing System Calls found in code:
+LIBCALL1 Solaris Library Calls
+LIBCALL2 libcl.db
+LIBCALL3 Files with Solaris Library Calls in code:                    %10d
+LIBCALL4 Number of files containing Solaris Library Calls:
+LIBCALL5 The following library calls differ between Linux and Solaris.  Please check the manual pages for the format of the output.
+LIBCALL6 Solaris Library Calls found in code:
+SOCCALL1 Socket Calls
+SOCCALL2 socket.db
+SOCCALL3 Number of files with Socket calls in code:                   %10d
+SOCCALL4 Number of files with Socket calls in code:
+SOCCALL5 Although Solaris and Linux use the same socket calls, the support protocols and formats may differ.
+SOCCALL6 Socket Calls found in code:
+THRDSOX1 Solaris Only POSIX Threads
+THRDSOX2 posthdsol.db
+THRDSOX3 Solaris Threaded Apps without POSIX Linux Alternatives:      %10d
+THRDSOX4 Number of files containing Solaris Threaded Apps without Linux POSIX Alternatives:
+THRDSOX5 The following Solaris threaded applications do not have POSIX Linux alternatives.
+THRDSOX6 Solaris Threaded Apps without POSIX Linux Alternatives found in code:
+THRDPSX1 Solaris POSIX Threads
+THRDPSX2 posthread.db
+THRDPSX3 Solaris Threaded Apps with POSIX Linux Alternatives:         %10d
+THRDPSX4 Number of files containing Solaris Threaded Apps with POSIX Alternatives:
+THRDPSX5 The following Solaris threaded applications have POSIX Linux alternatives The names are different, but the functions are similar. Solaris threaded apps with POSIX Linux alternatives found.
+THRDPSX6 Solaris Threaded Apps with POSIX Linux Alternatives found in code:
+THRDSOL1 Solaris Only Threads
+THRDSOL2 threadsol.db
+THRDSOL3 Number of files with Solaris Specific Threads:               %10d
+THRDSOL4 Number of files with Solaris Specific Threads:
+THRDSOL5 The following threaded applications are in Solaris only.
+THRDSOL6 Solaris Only Threaded Applications found in code:
+THREADS1 Solaris Threads that are Linux Compataible
+THREADS2 threads.db
+THREADS3 Files with Solaris/Linux Compatible Threads:                 %10d
+THREADS4 Files with Solaris/Linux Compatible Threads:
+THREADS5 The following threaded applications are in compatible between Solaris and Linux.  It may be required to include pthread.h in the source code.
+THREADS6 Solaris Threaded Applications that are Linux Compatible found in code:
+SEMIDDI1 Solaris Only Semiphores
+SEMIDDI2 semaphddi.db
+SEMIDDI3 Number of Solaris Only Semaphores:                           %10d 
+SEMIDDI4 Number of files with Solaris Only Semiphores in code:
+SEMIDDI5 The following Solaris Only Semaphores have been found in the code. Alternatives must be found for proper code compilation under Linux.
+SEMIDDI6 Solaris Only Semaphores found in code:
+SEMIPHR1 Linux Compatable Semiphores
+SEMIPHR2 semaphore.db
+SEMIPHR3 Number of Solaris/Linux Compatable Semaphores:               %10d 
+SEMIPHR4 Number of files with Solaris/Linux Compatable Semiphores in code:
+SEMIPHR5 The following Solaris Semaphores have a Linux equivilant which does vary slightly from the Solaris semaphore.  This reqires the inclusion of the semaphore.h library, and the renaming of the semaphore call.  Check the CountCat User Guide for mor einformation.
+SEMIPHR6 Linux compatable Semaphores found in code:
+BINCALL1 Possible Binary Calls
+BINCALL2 ccat.cfiles
+BINCALL3 (system(
+BINCALL4 Possible binary calls in code:                               %10d
+BINCALL5 Possible binary calls in code
+BINCALL6 Please check the following files as it's possible that they may contain system  calls  to binaries. <BR>These binaries may  behave differently  depending on the flavour of *NIX used.
+UNION__1 Union Declarations
+UNION__2 ccat.hfiles
+UNION__3 union
+UNION__4 Union declarations in headers:                               %10d
+UNION__5 Union declarations found in header files.
+UNION__6 Union declarations are known to  differ in their format between Solaris and Linux.  These differences are easily spotted and changed. Please see the Migration Guide for more detail and examples.
+XFN____1 X/Open Federated Naming Service
+XFN____2 ccat.hfiles
+XFN____3 xfn.h
+XFN____4 XFN references in headers:                                   %10d
+XFN____5 XFN references found in header files.
+XFN____6 X/Open Federated Naming Service is not supported in a standard Linux installation.  Please see the Migration Guide for more detail and examples.
+TERM_IO1 Terminal IO
+TERM_IO2 ccat.cfiles
+TERM_IO3 termiso.h
+TERM_IO4 Terminal IO using termios.h:                                 %10d
+TERM_IO5 Number of Terminal IO using termios.h instances:
+TERM_IO6 The  folowing  C-Source is referencing termios.h. The termio  structure has  some extra  fields  in Linux with regards to speeds.
+SIGCALL1 Signal Calls
+SIGCALL2 ccat.cfiles
+SIGCALL3 signal.h
+SIGCALL4 Signal calls in code:                                        %10d
+SIGCALL5 Number of signal calls using signal.h instances:
+SIGCALL6 The  folowing  C-Source is referencing signal.h. Signal calls do differ between Solaris and Linux. The number and types of  calls,  and  also  their actions once called can be very different. <BR> See the Migration Guide for more detail.
+PRAGMA_1 Solaris #pragma pack
+PRAGMA_2 ccat.hfiles
+PRAGMA_3 #pragma
+PRAGMA_4 Header files utilising the Solaris #pragma pack:             %10d
+PRAGMA_5 Solaris #pragma pack declarations found in header files:
+PRAGMA_6 Solaris #pragma pack declarations are not supported in Linux.
+ERRMSG_1 Error Messages
+ERRMSG_2 ccat.cfiles
+ERRMSG_3 errmsg
+ERRMSG_4 Files containing the errmsg call                             %10d
+ERRMSG_5 Files containing the errmsg call:
+ERRMSG_6 The use of the errmsg call is not supported under gcc in Linux.  Please consider using an fprintf.<BR> See the Migration Guide for more detail.
+DOPRNTF1 doprintf Instances
+DOPRNTF2 ccat.cfiles
+DOPRNTF3 doprintf
+DOPRNTF4 Files containing the doprintf call                           %10d
+DOPRNTF5 Files containing the doprintf call:
+DOPRNTF6 The use of doprintf is not supported under gcc in Linux.  Please consider using an fprintf.<BR> See the Migration Guide for more detail.
+MEMCPY_1 bcopy Instances
+MEMCPY_2 ccat.cfiles
+MEMCPY_3 bcopy 
+MEMCPY_4 Files containing the deprecated bcopy routine:               %10d
+MEMCPY_5 Files containing the deprecated bcopy routine:
+MEMCPY_6 The use of bcopy in Linux has been deprecated.  It is suggested to use memcpy instead.<BR> See the Migration Guide and the Linux bcopy man pages for more detail.

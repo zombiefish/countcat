@@ -1,0 +1,5 @@
+thr_getprio
+thr_keycreate
+thr_setprio
+thr_sigsetmask
+thr_yield

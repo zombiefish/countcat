@@ -1,0 +1,15 @@
+PID 13298 04/11/103 09:32:34: Names are:
+PID 13298 04/11/103 09:32:34: dbdir    = /export/home/hubble/logbook/logs5/B-EPM5b
+PID 13298 04/11/103 09:32:34: dbname   = t3db
+PID 13298 04/11/103 09:32:34: dbpath   = /export/home/hubble/logbook/logs5/B-EPM5b/t3db
+PID 13298 04/11/103 09:32:34: textdir  = text
+PID 13298 04/11/103 09:32:34: textpath = /export/home/hubble/logbook/logs5/B-EPM5b/text
+PID 13298 04/11/103 09:32:34: incseq   = /export/home/hubble/logbook/logs5/B-EPM5b/INCSEQ
+PID 13298 04/11/103 09:32:34: logseq   = /export/home/hubble/logbook/logs5/B-EPM5b/LOGSEQ
+PID 13298 04/11/103 09:32:34: msgqname = /export/home/hubble/logbook/logs5/B-EPM5b/MSGQ
+PID 13298 04/11/103 09:32:34: Cachesize= 1048576 (0x00100000)
+PID 13298 04/11/103 09:32:35: Created /export/home/hubble/logbook/logs5/B-EPM5b/MSGQ
+PID 13298 04/11/103 09:32:35: Created msgqid 450 (0x000001c2)
+PID 13298 04/11/103 09:32:35: ./t3daemon: Up, ready and waiting
+PID 13298 04/11/103 09:32:35: About to do msgrcv msgqid  (0x000001c2)
+PID 13298 04/15/103 04:37:19: Caught SIGHUP - exitting

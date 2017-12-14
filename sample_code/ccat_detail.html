@@ -1,0 +1,426 @@
+<pre>
+---------------------
+Solaris Only Headers
+---------------------
+---------------------
+Solaris System Calls
+---------------------
+---------------------
+Solaris System Calls
+---------------------
+---------------------
+Solaris System Calls
+---------------------
+---------------------
+Solaris System Calls
+---------------------
+---------------------
+Solaris System Calls
+---------------------
+::: File lib/.SCCS/s.t3ifc.c 
+ :: Call msgget() 
+  : Line(s):
+1026:	} while( (retmsgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0);
+1081:	} while( (retmsgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0);
+...
+::: File lib/.SCCS/s.t3ifc.c 
+ :: Call msgrcv() 
+  : Line(s):
+1130:	if( (val = msgrcv(retmsgqid, msgbuf, MAXMSGLEN, 0, 0)) < 0)
+...
+::: File lib/.SCCS/s.t3ifc.c 
+ :: Call msgsnd() 
+  : Line(s):
+36:c Ensure that we shutdown() when we get an error on domsgsnd(); fix nextsame() so it won't startup before it should.
+56:c startup() and domsgsnd() now return values instead of issuing errmsg()s.  Removed errmsg().
+222:	domsgsnd(OPENDB, t3comm);
+226:	if( (val = domsgsnd(OPENDB, t3comm)) != 0)
+229:	if( (val = domsgsnd(OPENDB, t3comm)) != 0) {
+266:	if( (val = domsgsnd(QUIESCE, t3comm)) != 0) {
+289:	if( (val = domsgsnd(RESUME, t3comm)) != 0) {
+334:		domsgsnd(ADDWORD, t3comm);
+338:		if( (wordentry[i].retval = domsgsnd(ADDWORD, t3comm)) != 0)
+341:		if( (wordentry[i].retval = domsgsnd(ADDWORD, t3comm)) != 0) {
+379:	domsgsnd(CLOSEDB, t3comm);
+383:	if( (val = domsgsnd(CLOSEDB, t3comm)) != 0)
+386:	if( (val = domsgsnd(CLOSEDB, t3comm)) != 0) {
+422:	domsgsnd(NEWINC, t3comm);
+435:	if( (val = domsgsnd(NEWINC, t3comm)) != 0)
+438:	if( (val = domsgsnd(NEWINC, t3comm)) != 0) {
+487:	domsgsnd(NEWLOG, t3comm);
+500:	if( (val = domsgsnd(NEWLOG, t3comm)) != 0)
+503:	if( (val = domsgsnd(NEWLOG, t3comm)) != 0) {
+568:	domsgsnd(FINDRE, t3comm);
+572:	if( (val = domsgsnd(FINDRE, t3comm)) != 0)
+575:	if( (val = domsgsnd(FINDRE, t3comm)) != 0) {
+644:	domsgsnd(NEXTRE, t3comm);
+648:	if( (val = domsgsnd(NEXTRE, t3comm)) != 0)
+651:	if( (val = domsgsnd(NEXTRE, t3comm)) != 0) {
+702:	domsgsnd(FIRSTWORD, t3comm);
+706:	if( (val = domsgsnd(FIRSTWORD, t3comm)) != 0)
+709:	if( (val = domsgsnd(FIRSTWORD, t3comm)) != 0) {
+761:	domsgsnd(NEXTWORD, t3comm);
+765:	if( (val = domsgsnd(NEXTWORD, t3comm)) != 0)
+768:	if( (val = domsgsnd(NEXTWORD, t3comm)) != 0) {
+824:	domsgsnd(NEXTSAME, t3comm);
+828:	if( (val = domsgsnd(NEXTSAME, t3comm)) != 0)
+837:	if( (val = domsgsnd(NEXTSAME, t3comm)) != 0) {
+897:	if( (val = domsgsnd(ADDFILE, t3comm)) != 0)
+900:	if( (val = domsgsnd(ADDFILE, t3comm)) != 0) {
+913:	domsgsnd(ADDFILE, t3comm);
+955:	domsgsnd(MAXENT, t3comm);
+963:	if( (val = domsgsnd(MAXENT, t3comm)) != 0)
+966:	if( (val = domsgsnd(MAXENT, t3comm)) != 0) {
+1103:domsgsnd(cmd, t3comm)
+1112:	while( (val = msgsnd(msgqid, msgbuf,
+...
+::: File lib/t3ifc.c 
+ :: Call msgget() 
+  : Line(s):
+619:	} while( (retmsgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0);
+...
+::: File lib/t3ifc.c 
+ :: Call msgrcv() 
+  : Line(s):
+672:	if( (val = msgrcv(retmsgqid, imsgbuf, MAXMSGLEN, 0, 0)) < 0)
+...
+::: File lib/t3ifc.c 
+ :: Call msgsnd() 
+  : Line(s):
+39:static int domsgsnd();
+112:	if( (val = domsgsnd(OPENDB, t3comm)) != 0) {
+145:	if( (val = domsgsnd(QUIESCE, t3comm)) != 0) {
+168:	if( (val = domsgsnd(RESUME, t3comm)) != 0) {
+196:		if( (wordentry[i].retval = domsgsnd(ADDWORD, t3comm)) != 0) {
+222:	if( (val = domsgsnd(CLOSEDB, t3comm)) != 0) {
+253:	if( (val = domsgsnd(NEWINC, t3comm)) != 0) {
+282:	if( (val = domsgsnd(NEWLOG, t3comm)) != 0) {
+327:	if( (val = domsgsnd(FINDRE, t3comm)) != 0) {
+369:	if( (val = domsgsnd(NEXTRE, t3comm)) != 0) {
+402:	if( (val = domsgsnd(FIRSTWORD, t3comm)) != 0) {
+446:	if( (val = domsgsnd(NEXTWORD, t3comm)) != 0) {
+491:	if( (val = domsgsnd(NEXTSAME, t3comm)) != 0) {
+525:	if( (val = domsgsnd(ADDFILE, t3comm)) != 0) {
+551:	if( (val = domsgsnd(MAXENT, t3comm)) != 0) {
+642:static int domsgsnd(cmd, t3comm)
+653:	while( (val = msgsnd(msgqid, imsgbuf,
+...
+::: File src/daemon/53access_wd.c 
+ :: Call open() 
+  : Line(s):
+162:	if( (dbifc->fd = open(fn, mode)) < 0)
+...
+::: File src/daemon/getmsgqid.c 
+ :: Call msgget() 
+  : Line(s):
+495:	if( (msgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0)
+...
+::: File src/daemon/getmsgqid.c 
+ :: Call msgrcv() 
+  : Line(s):
+675:** whatever was returned by msgrcv().
+680:	return(msgrcv(msgqid, msgbuf, MAXMSGLEN, 0L, 0));
+...
+::: File src/daemon/getmsgqid.c 
+ :: Call msgsnd() 
+  : Line(s):
+1263:	if( (val = msgsnd(t3comm->msgqid,
+...
+::: File src/daemon/getmsgqid.c 
+ :: Call open() 
+  : Line(s):
+263:		if( (errfile = fopen(cp, "a")) == NULL) {
+450:	incseqfd = open(incseqfn, O_RDWR | O_SYNC);
+468:	logseqfd = open(logseqfn, O_RDWR | O_SYNC);
+499:	if( (fp = fopen(msgqname, "w")) == NULL)
+747:			return(fd = open(*fn, O_RDWR));
+1119:	if( (fp = fopen(t3comm->data, "r")) == NULL) {
+...
+::: File src/daemon/misc.c 
+ :: Call open() 
+  : Line(s):
+52:	if((fd = open(flockfn, O_CREAT | O_WRONLY)) < 0) {
+69:	if((fd = open(flockfn, O_RDWR)) < 0) {
+...
+::: File src/daemon/t3access.c 
+ :: Call open() 
+  : Line(s):
+163:	if( (dbifc->fd = open(fn, mode)) < 0)
+...
+::: File src/daemon/t3daemon.c 
+ :: Call msgget() 
+  : Line(s):
+511:	msgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL);
+514:	/* if( (msgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0) { */
+521:	debug(1, "msgqid from msgget() = (0x%08x)\n", msgqid);
+...
+::: File src/daemon/t3daemon.c 
+ :: Call msgrcv() 
+  : Line(s):
+700:** whatever was returned by msgrcv().
+705:	return(msgrcv(msgqid, msgbuf, MAXMSGLEN, 0L, 0));
+...
+::: File src/daemon/t3daemon.c 
+ :: Call msgsnd() 
+  : Line(s):
+1292:	if( (val = msgsnd(t3comm->msgqid,
+...
+::: File src/daemon/t3daemon.c 
+ :: Call open() 
+  : Line(s):
+263:		if( (errfile = fopen(cp, "a")) == NULL) {
+458:	incseqfd = open(incseqfn, O_RDWR | O_SYNC);
+481:	logseqfd = open(logseqfn, O_RDWR | O_SYNC);
+524:	if( (fp = fopen(msgqname, "w")) == NULL)
+772:			return(fd = open(*fn, O_RDWR));
+1148:	if( (fp = fopen(t3comm->data, "r")) == NULL) {
+...
+::: File src/tools/checkdb.c 
+ :: Call open() 
+  : Line(s):
+81:    if( (idb.fd = open(fn, O_RDONLY)) <= 0)
+...
+::: File src/tools/dumpdb.c 
+ :: Call open() 
+  : Line(s):
+102:    if( (idb.fd = open(fn, O_RDONLY)) <= 0)
+...
+---------------------
+Solaris Library Calls
+---------------------
+::: File src/daemon/53access_wd.c 
+ :: Call regex() 
+  : Line(s):
+1000:		while( ((cmpval = regex(pat, idb.hdrp->word)) == NULL)
+...
+::: File src/daemon/t3access.c 
+ :: Call regex() 
+  : Line(s):
+1041:		while( ((cmpval = regex(pat, idb.hdrp->word)) == NULL)
+...
+---------------------
+Socket Calls
+---------------------
+::: File lib/.SCCS/s.t3ifc.c 
+ :: Call shutdown() 
+  : Line(s):
+36:c Ensure that we shutdown() when we get an error on domsgsnd(); fix nextsame() so it won't startup before it should.
+232:		shutdown();
+251:	shutdown();
+269:		shutdown();
+274:	shutdown();
+292:		shutdown();
+297:	shutdown();
+343:			shutdown();
+355:	shutdown();
+389:		shutdown();
+407:	shutdown();
+441:		shutdown();
+450:	shutdown();
+506:		shutdown();
+515:	shutdown();
+578:		shutdown();
+608:	shutdown();
+654:		shutdown();
+677:	shutdown();
+712:		shutdown();
+728:	shutdown();
+771:		shutdown();
+787:	shutdown();
+840:		shutdown();
+860:	shutdown();
+903:		shutdown();
+925:	shutdown();
+969:		shutdown();
+978:	shutdown();
+1095:shutdown() {
+1159:	shutdown();
+...
+::: File lib/t3ifc.c 
+ :: Call shutdown() 
+  : Line(s):
+40:static int shutdown();
+117:		shutdown();
+131:	shutdown();
+148:		shutdown();
+153:	shutdown();
+171:		shutdown();
+176:	shutdown();
+198:			shutdown();
+206:	shutdown();
+225:		shutdown();
+239:	shutdown();
+256:		shutdown();
+261:	shutdown();
+285:		shutdown();
+290:	shutdown();
+330:		shutdown();
+346:	shutdown();
+372:		shutdown();
+386:	shutdown();
+405:		shutdown();
+417:	shutdown();
+449:		shutdown();
+461:	shutdown();
+494:		shutdown();
+506:	shutdown();
+528:		shutdown();
+536:	shutdown();
+554:		shutdown();
+559:	shutdown();
+634:static int shutdown()
+...
+::: File src/daemon/getmsgqid.c 
+ :: Call sendmsg() 
+  : Line(s):
+56:static int sendmsg(struct t3comm *t3comm);
+322:				sendmsg(t3comm);
+328:			sendmsg(t3comm);
+782:	sendmsg(t3comm);
+796:			sendmsg(t3comm);
+816:	sendmsg(t3comm);
+830:			sendmsg(t3comm);
+853:	sendmsg(t3comm);
+872:			sendmsg(t3comm);
+894:	sendmsg(t3comm);
+911:			sendmsg(t3comm);
+940:	sendmsg(t3comm);
+959:	sendmsg(t3comm);
+981:	sendmsg(t3comm);
+1019:	sendmsg(t3comm);
+1037:			sendmsg(t3comm);
+1065:	sendmsg(t3comm);
+1101:	sendmsg(t3comm);
+1125:		sendmsg(t3comm);
+1136:			sendmsg(t3comm);
+1180:	sendmsg(t3comm);
+1192:	sendmsg(t3comm);
+1225:	sendmsg(t3comm);
+1254:	sendmsg(t3comm);
+1259:static int sendmsg(struct t3comm *t3comm)
+...
+::: File src/daemon/t3daemon.c 
+ :: Call sendmsg() 
+  : Line(s):
+56:static int sendmsg(struct t3comm *t3comm);
+326:				sendmsg(t3comm);
+332:			sendmsg(t3comm);
+807:	sendmsg(t3comm);
+821:			sendmsg(t3comm);
+841:	sendmsg(t3comm);
+855:			sendmsg(t3comm);
+878:	sendmsg(t3comm);
+897:			sendmsg(t3comm);
+919:	sendmsg(t3comm);
+936:			sendmsg(t3comm);
+965:	sendmsg(t3comm);
+984:	sendmsg(t3comm);
+1006:	sendmsg(t3comm);
+1047:	sendmsg(t3comm);
+1066:			sendmsg(t3comm);
+1094:	sendmsg(t3comm);
+1130:	sendmsg(t3comm);
+1154:		sendmsg(t3comm);
+1165:			sendmsg(t3comm);
+1209:	sendmsg(t3comm);
+1221:	sendmsg(t3comm);
+1254:	sendmsg(t3comm);
+1283:	sendmsg(t3comm);
+1288:static int sendmsg(struct t3comm *t3comm)
+...
+---------------------
+Solaris POSIX Threads
+---------------------
+---------------------
+Solaris Only POSIX Threads
+---------------------
+---------------------
+Solaris Only Threads
+---------------------
+---------------------
+Solaris Threads that are Linux Compataible
+---------------------
+---------------------
+Solaris Only Semiphores
+---------------------
+---------------------
+Linux Compatable Semiphores
+---------------------
+---------------------
+Possible Binary Calls
+---------------------
+::: File src/daemon/getmsgqid.c 
+  : Line(s):
+718:			if(system(temp) != 0)
+733:			if(system(temp) != 0)
+1354:	if(system(temp) != 0)
+...
+::: File src/daemon/t3daemon.c 
+  : Line(s):
+743:			if(system(temp) != 0)
+758:			if(system(temp) != 0)
+1383:	if(system(temp) != 0)
+...
+::: File src/tools/formatdb.c 
+  : Line(s):
+118:	if(system(cp) != 0)
+163:	if(system(cp) != 0)
+...
+---------------------
+Union Declarations
+---------------------
+::: File ./include/t3db.h 
+  : Line(s):
+59:	union {
+...
+---------------------
+X/Open Federated Naming Service
+---------------------
+---------------------
+Terminal IO
+---------------------
+---------------------
+Signal Calls
+---------------------
+::: File src/daemon/misc.c 
+  : Line(s):
+3:#include <signal.h>
+...
+---------------------
+doprintf Instances
+---------------------
+::: File src/tools/checkdb.c 
+  : Line(s):
+172:		doprintf("Missed reading the following bytes:
+");
+180:			doprintf("    0x%08lx-0x%08lx
+", p-used, p1-used);
+357:			doprintf("Error! Overlap of location 0x%08lx for ",
+362:			doprintf("%ld bytes
+",
+391:			doprintf("Error! Overlap of location 0x%08lx for ",
+396:			doprintf("%ld bytes
+",
+419:doprintf(va_alist)
+...
+---------------------
+bcopy Instances
+---------------------
+::: File src/tools/checkdb.c 
+  : Line(s):
+318:		** while bcopy() doesn't.
+338:		** while bcopy() doesn't.
+349:		bcopy(oused, used, ousedlen);
+371:		** while bcopy() doesn't.
+405:		** while bcopy() doesn't.
+...
+---------------------
+Solaris #pragma pack
+---------------------
+---------------------
+Script Hunting      
+---------------------
+<PRE>
+No scripts found
+</PRE>
+</PRE>
