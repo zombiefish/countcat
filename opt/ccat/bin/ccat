@@ -409,8 +409,8 @@ audit(){
    # Start the source code audit
    clear
    printf "<HEAD>\n" > $RPT
-   printf "<title>FUJITSU</title>" >> $RPT
-   printf "<meta content=\"Copyright (C) FUJITSU\" name=\"copyright\" />" >> $RPT
+   printf "<title>CountCat</title>" >> $RPT
+   printf "<meta content=\"Copyright (C) CountCat\" name=\"copyright\" />" >> $RPT
    printf "</HEAD>\n" >> $RPT
    printf "<BODY><TABLE width=\"620\" cellpadding=\"1\" style=\"border:2px solid black;\" border=\"0\"><TR><TD><img src="logo.png"></TD>" >> $RPT
    printf "<TD ALIGN=RIGHT>$FONT<B><I>Solaris to Linux C Source Analyser</B></I></TD></TR>" >> $RPT
