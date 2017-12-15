@@ -17,7 +17,7 @@ CCOUNT=0
 CFILECOUNT=0
 CHF=0
 CTOTCOUNT=0
-BASE=/opt/HVccat
+BASE=/opt/ccat
 LIB=$BASE/lib
 DB=$BASE/hdrdb  
 VERSION=`head -n 1 $BASE/VERSION | awk '{print $1 }'`
@@ -417,10 +417,10 @@ audit(){
    printf "<TR><TD></TD><TD ALIGN=RIGHT>$FONT ccat version: $VERSION</TD></TR>" >> $RPT
    printf "<TR><TD></TD><TD ALIGN=RIGHT>$FONT Report Run: `date`</TD></TR>" >> $RPT
    printf "==============================================================================\n"
-   printf "H I G H V A I L   S Y S T E M S   I N C .                      C o u n t C a t\n"
-   printf "                                                          HVccat release $VERSION\n"
+   printf "                                                               C o u n t C a t\n"
+   printf "                                                           ccat release $VERSION\n"
    printf "                                                                    $VERSIONDATE\n"
-   printf "HighVail Migration Services             Run Date: `date`\n"
+   printf "CountCat Migration Services             Run Date: `date`\n"
    printf "==============================================================================\n"
    printf "<TR><TD>$FONT System Information</TD><TD></TD></TR>\n" >> $RPT
    printf "<TR><TD>$FONT Arch:</TD><TD>$FONT $PLATFORM</TD></TR>\n" >> $RPT
@@ -607,7 +607,7 @@ case "$1" in
       exit
       ;;
    version)
-      echo "HVccat version `cat $BASE/etc/version`"
+      echo "ccat version `cat $BASE/etc/version`"
       exit 0
       ;;
    help)
@@ -620,7 +620,7 @@ case "$1" in
       echo "    quick will run ccat line counting and exit"
       echo "    script will run ccat script counting and exit"
       echo "    help shows help screen"
-      echo "    show HVccat version and quit"
+      echo "    show ccat version and quit"
       exit
 esac
 
@@ -630,7 +630,7 @@ init
 # Add source and target library
 build_library
 
-cp $BASE/lib/logo.png .			# copy HighVail logo over
+cp $BASE/lib/logo.png .			# copy CountCat logo over
 
 # Start the source code audit
 audit
@@ -706,12 +706,12 @@ cat script_detail.html >> $DRPT
 purge  
 echo
 echo  ------------------------------------------------------------------------------ 
-echo "Please see $RPT and ccat.csv for more detail Copyright HighVail 2008-2014"
+echo "Please see $RPT and ccat.csv for more detail Copyright CountCat 2008-2018"
 echo  ------------------------------------------------------------------------------ 
 printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
 printf "<TR style=\"background:#efe;\"><TD colspan=\"2\" ALIGN=\"CENTER\">$FONT see <a href=\"$DRPT\">$DRPT</a> for a more detailed analysis.</TD></TR>\n" >> $RPT
 printf "<TR style=\"background:#efe;\"><TD colspan=\"2\" ALIGN=\"CENTER\">$FONT see ccat.csv for spreadsheet use.</TD></TR>\n" >> $RPT
 printf "<TR><TD></TD><TD></TD></TR>\n" >> $RPT
-printf "<TR style=\"background:#efe;\"><TD colspan=\"2\" ALIGN=\"RIGHT\">$FONT Copyright HighVail 2008-2014</TD></TR>\n" >> $RPT
+printf "<TR style=\"background:#efe;\"><TD colspan=\"2\" ALIGN=\"RIGHT\">$FONT Copyright CountCat 2008-2018</TD></TR>\n" >> $RPT
 printf "</TABLE>\n" >> $RPT
 printf "</PRE>" >> $DRPT

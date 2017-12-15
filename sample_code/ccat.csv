@@ -1,3 +1,22 @@
+msgget---lib/t3ifc.c---619---	} while( (retmsgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0);
+msgrcv---lib/t3ifc.c---672---	if( (val = msgrcv(retmsgqid, imsgbuf, MAXMSGLEN, 0, 0)) < 0)
+msgsnd---lib/t3ifc.c---39---static int domsgsnd();
+msgsnd---lib/t3ifc.c---112---	if( (val = domsgsnd(OPENDB, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---145---	if( (val = domsgsnd(QUIESCE, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---168---	if( (val = domsgsnd(RESUME, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---196---		if( (wordentry[i].retval = domsgsnd(ADDWORD, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---222---	if( (val = domsgsnd(CLOSEDB, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---253---	if( (val = domsgsnd(NEWINC, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---282---	if( (val = domsgsnd(NEWLOG, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---327---	if( (val = domsgsnd(FINDRE, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---369---	if( (val = domsgsnd(NEXTRE, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---402---	if( (val = domsgsnd(FIRSTWORD, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---446---	if( (val = domsgsnd(NEXTWORD, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---491---	if( (val = domsgsnd(NEXTSAME, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---525---	if( (val = domsgsnd(ADDFILE, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---551---	if( (val = domsgsnd(MAXENT, t3comm)) != 0) {
+msgsnd---lib/t3ifc.c---642---static int domsgsnd(cmd, t3comm)
+msgsnd---lib/t3ifc.c---653---	while( (val = msgsnd(msgqid, imsgbuf,
 msgget---lib/.SCCS/s.t3ifc.c---1026---	} while( (retmsgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0);
 msgget---lib/.SCCS/s.t3ifc.c---1081---	} while( (retmsgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0);
 msgrcv---lib/.SCCS/s.t3ifc.c---1130---	if( (val = msgrcv(retmsgqid, msgbuf, MAXMSGLEN, 0, 0)) < 0)
@@ -43,26 +62,9 @@ msgsnd---lib/.SCCS/s.t3ifc.c---963---	if( (val = domsgsnd(MAXENT, t3comm)) != 0)
 msgsnd---lib/.SCCS/s.t3ifc.c---966---	if( (val = domsgsnd(MAXENT, t3comm)) != 0) {
 msgsnd---lib/.SCCS/s.t3ifc.c---1103---domsgsnd(cmd, t3comm)
 msgsnd---lib/.SCCS/s.t3ifc.c---1112---	while( (val = msgsnd(msgqid, msgbuf,
-msgget---lib/t3ifc.c---619---	} while( (retmsgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0);
-msgrcv---lib/t3ifc.c---672---	if( (val = msgrcv(retmsgqid, imsgbuf, MAXMSGLEN, 0, 0)) < 0)
-msgsnd---lib/t3ifc.c---39---static int domsgsnd();
-msgsnd---lib/t3ifc.c---112---	if( (val = domsgsnd(OPENDB, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---145---	if( (val = domsgsnd(QUIESCE, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---168---	if( (val = domsgsnd(RESUME, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---196---		if( (wordentry[i].retval = domsgsnd(ADDWORD, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---222---	if( (val = domsgsnd(CLOSEDB, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---253---	if( (val = domsgsnd(NEWINC, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---282---	if( (val = domsgsnd(NEWLOG, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---327---	if( (val = domsgsnd(FINDRE, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---369---	if( (val = domsgsnd(NEXTRE, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---402---	if( (val = domsgsnd(FIRSTWORD, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---446---	if( (val = domsgsnd(NEXTWORD, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---491---	if( (val = domsgsnd(NEXTSAME, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---525---	if( (val = domsgsnd(ADDFILE, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---551---	if( (val = domsgsnd(MAXENT, t3comm)) != 0) {
-msgsnd---lib/t3ifc.c---642---static int domsgsnd(cmd, t3comm)
-msgsnd---lib/t3ifc.c---653---	while( (val = msgsnd(msgqid, imsgbuf,
-open---src/daemon/53access_wd.c---162---	if( (dbifc->fd = open(fn, mode)) < 0)
+open---src/tools/checkdb.c---81---    if( (idb.fd = open(fn, O_RDONLY)) <= 0)
+open---src/tools/dumpdb.c---102---    if( (idb.fd = open(fn, O_RDONLY)) <= 0)
+open---src/daemon/t3access.c---163---	if( (dbifc->fd = open(fn, mode)) < 0)
 msgget---src/daemon/getmsgqid.c---495---	if( (msgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0)
 msgrcv---src/daemon/getmsgqid.c---675---** whatever was returned by msgrcv().
 msgrcv---src/daemon/getmsgqid.c---680---	return(msgrcv(msgqid, msgbuf, MAXMSGLEN, 0L, 0));
@@ -73,13 +75,9 @@ open---src/daemon/getmsgqid.c---468---	logseqfd = open(logseqfn, O_RDWR | O_SYNC
 open---src/daemon/getmsgqid.c---499---	if( (fp = fopen(msgqname, "w")) == NULL)
 open---src/daemon/getmsgqid.c---747---			return(fd = open(*fn, O_RDWR));
 open---src/daemon/getmsgqid.c---1119---	if( (fp = fopen(t3comm->data, "r")) == NULL) {
-open---src/daemon/misc.c---52---	if((fd = open(flockfn, O_CREAT | O_WRONLY)) < 0) {
-open---src/daemon/misc.c---69---	if((fd = open(flockfn, O_RDWR)) < 0) {
-open---src/daemon/t3access.c---163---	if( (dbifc->fd = open(fn, mode)) < 0)
 msgget---src/daemon/t3daemon.c---511---	msgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL);
 msgget---src/daemon/t3daemon.c---514---	/* if( (msgqid = msgget(msgkey, 0666 | IPC_CREAT | IPC_EXCL)) < 0) { */
-msgget---src/daemon/t3daemon.c---521---	debug(1, "msgqid from msgget() = (0x%08x)
-", msgqid);
+msgget---src/daemon/t3daemon.c---521---	debug(1, "msgqid from msgget() = (0x%08x)\n", msgqid);
 msgrcv---src/daemon/t3daemon.c---700---** whatever was returned by msgrcv().
 msgrcv---src/daemon/t3daemon.c---705---	return(msgrcv(msgqid, msgbuf, MAXMSGLEN, 0L, 0));
 msgsnd---src/daemon/t3daemon.c---1292---	if( (val = msgsnd(t3comm->msgqid,
@@ -89,10 +87,41 @@ open---src/daemon/t3daemon.c---481---	logseqfd = open(logseqfn, O_RDWR | O_SYNC)
 open---src/daemon/t3daemon.c---524---	if( (fp = fopen(msgqname, "w")) == NULL)
 open---src/daemon/t3daemon.c---772---			return(fd = open(*fn, O_RDWR));
 open---src/daemon/t3daemon.c---1148---	if( (fp = fopen(t3comm->data, "r")) == NULL) {
-open---src/tools/checkdb.c---81---    if( (idb.fd = open(fn, O_RDONLY)) <= 0)
-open---src/tools/dumpdb.c---102---    if( (idb.fd = open(fn, O_RDONLY)) <= 0)
-regex---src/daemon/53access_wd.c---1000---		while( ((cmpval = regex(pat, idb.hdrp->word)) == NULL)
+open---src/daemon/53access_wd.c---162---	if( (dbifc->fd = open(fn, mode)) < 0)
+open---src/daemon/misc.c---52---	if((fd = open(flockfn, O_CREAT | O_WRONLY)) < 0) {
+open---src/daemon/misc.c---69---	if((fd = open(flockfn, O_RDWR)) < 0) {
 regex---src/daemon/t3access.c---1041---		while( ((cmpval = regex(pat, idb.hdrp->word)) == NULL)
+regex---src/daemon/53access_wd.c---1000---		while( ((cmpval = regex(pat, idb.hdrp->word)) == NULL)
+shutdown---lib/t3ifc.c---40---static int shutdown();
+shutdown---lib/t3ifc.c---117---		shutdown();
+shutdown---lib/t3ifc.c---131---	shutdown();
+shutdown---lib/t3ifc.c---148---		shutdown();
+shutdown---lib/t3ifc.c---153---	shutdown();
+shutdown---lib/t3ifc.c---171---		shutdown();
+shutdown---lib/t3ifc.c---176---	shutdown();
+shutdown---lib/t3ifc.c---198---			shutdown();
+shutdown---lib/t3ifc.c---206---	shutdown();
+shutdown---lib/t3ifc.c---225---		shutdown();
+shutdown---lib/t3ifc.c---239---	shutdown();
+shutdown---lib/t3ifc.c---256---		shutdown();
+shutdown---lib/t3ifc.c---261---	shutdown();
+shutdown---lib/t3ifc.c---285---		shutdown();
+shutdown---lib/t3ifc.c---290---	shutdown();
+shutdown---lib/t3ifc.c---330---		shutdown();
+shutdown---lib/t3ifc.c---346---	shutdown();
+shutdown---lib/t3ifc.c---372---		shutdown();
+shutdown---lib/t3ifc.c---386---	shutdown();
+shutdown---lib/t3ifc.c---405---		shutdown();
+shutdown---lib/t3ifc.c---417---	shutdown();
+shutdown---lib/t3ifc.c---449---		shutdown();
+shutdown---lib/t3ifc.c---461---	shutdown();
+shutdown---lib/t3ifc.c---494---		shutdown();
+shutdown---lib/t3ifc.c---506---	shutdown();
+shutdown---lib/t3ifc.c---528---		shutdown();
+shutdown---lib/t3ifc.c---536---	shutdown();
+shutdown---lib/t3ifc.c---554---		shutdown();
+shutdown---lib/t3ifc.c---559---	shutdown();
+shutdown---lib/t3ifc.c---634---static int shutdown()
 shutdown---lib/.SCCS/s.t3ifc.c---36---c Ensure that we shutdown() when we get an error on domsgsnd(); fix nextsame() so it won't startup before it should.
 shutdown---lib/.SCCS/s.t3ifc.c---232---		shutdown();
 shutdown---lib/.SCCS/s.t3ifc.c---251---	shutdown();
@@ -124,36 +153,6 @@ shutdown---lib/.SCCS/s.t3ifc.c---969---		shutdown();
 shutdown---lib/.SCCS/s.t3ifc.c---978---	shutdown();
 shutdown---lib/.SCCS/s.t3ifc.c---1095---shutdown() {
 shutdown---lib/.SCCS/s.t3ifc.c---1159---	shutdown();
-shutdown---lib/t3ifc.c---40---static int shutdown();
-shutdown---lib/t3ifc.c---117---		shutdown();
-shutdown---lib/t3ifc.c---131---	shutdown();
-shutdown---lib/t3ifc.c---148---		shutdown();
-shutdown---lib/t3ifc.c---153---	shutdown();
-shutdown---lib/t3ifc.c---171---		shutdown();
-shutdown---lib/t3ifc.c---176---	shutdown();
-shutdown---lib/t3ifc.c---198---			shutdown();
-shutdown---lib/t3ifc.c---206---	shutdown();
-shutdown---lib/t3ifc.c---225---		shutdown();
-shutdown---lib/t3ifc.c---239---	shutdown();
-shutdown---lib/t3ifc.c---256---		shutdown();
-shutdown---lib/t3ifc.c---261---	shutdown();
-shutdown---lib/t3ifc.c---285---		shutdown();
-shutdown---lib/t3ifc.c---290---	shutdown();
-shutdown---lib/t3ifc.c---330---		shutdown();
-shutdown---lib/t3ifc.c---346---	shutdown();
-shutdown---lib/t3ifc.c---372---		shutdown();
-shutdown---lib/t3ifc.c---386---	shutdown();
-shutdown---lib/t3ifc.c---405---		shutdown();
-shutdown---lib/t3ifc.c---417---	shutdown();
-shutdown---lib/t3ifc.c---449---		shutdown();
-shutdown---lib/t3ifc.c---461---	shutdown();
-shutdown---lib/t3ifc.c---494---		shutdown();
-shutdown---lib/t3ifc.c---506---	shutdown();
-shutdown---lib/t3ifc.c---528---		shutdown();
-shutdown---lib/t3ifc.c---536---	shutdown();
-shutdown---lib/t3ifc.c---554---		shutdown();
-shutdown---lib/t3ifc.c---559---	shutdown();
-shutdown---lib/t3ifc.c---634---static int shutdown()
 sendmsg---src/daemon/getmsgqid.c---56---static int sendmsg(struct t3comm *t3comm);
 sendmsg---src/daemon/getmsgqid.c---322---				sendmsg(t3comm);
 sendmsg---src/daemon/getmsgqid.c---328---			sendmsg(t3comm);
@@ -204,26 +203,22 @@ sendmsg---src/daemon/t3daemon.c---1221---	sendmsg(t3comm);
 sendmsg---src/daemon/t3daemon.c---1254---	sendmsg(t3comm);
 sendmsg---src/daemon/t3daemon.c---1283---	sendmsg(t3comm);
 sendmsg---src/daemon/t3daemon.c---1288---static int sendmsg(struct t3comm *t3comm)
+(system(---src/tools/formatdb.c---118---	if(system(cp) != 0)
+(system(---src/tools/formatdb.c---163---	if(system(cp) != 0)
 (system(---src/daemon/getmsgqid.c---718---			if(system(temp) != 0)
 (system(---src/daemon/getmsgqid.c---733---			if(system(temp) != 0)
 (system(---src/daemon/getmsgqid.c---1354---	if(system(temp) != 0)
 (system(---src/daemon/t3daemon.c---743---			if(system(temp) != 0)
 (system(---src/daemon/t3daemon.c---758---			if(system(temp) != 0)
 (system(---src/daemon/t3daemon.c---1383---	if(system(temp) != 0)
-(system(---src/tools/formatdb.c---118---	if(system(cp) != 0)
-(system(---src/tools/formatdb.c---163---	if(system(cp) != 0)
 union---./include/t3db.h---59---	union {
 signal.h---src/daemon/misc.c---3---#include <signal.h>
 doprintf---src/tools/checkdb.c---172---		doprintf("Missed reading the following bytes
-doprintf---src/tools/checkdb.c---");---");
-doprintf---src/tools/checkdb.c---180---			doprintf("    0x%08lx-0x%08lx
-doprintf---src/tools/checkdb.c---", p-used, p1-used);---", p-used, p1-used);
+doprintf---src/tools/checkdb.c---180---			doprintf("    0x%08lx-0x%08lx\n", p-used, p1-used);
 doprintf---src/tools/checkdb.c---357---			doprintf("Error! Overlap of location 0x%08lx for ",
-doprintf---src/tools/checkdb.c---362---			doprintf("%ld bytes
-doprintf---src/tools/checkdb.c---",---",
+doprintf---src/tools/checkdb.c---362---			doprintf("%ld bytes\n",
 doprintf---src/tools/checkdb.c---391---			doprintf("Error! Overlap of location 0x%08lx for ",
-doprintf---src/tools/checkdb.c---396---			doprintf("%ld bytes
-doprintf---src/tools/checkdb.c---",---",
+doprintf---src/tools/checkdb.c---396---			doprintf("%ld bytes\n",
 doprintf---src/tools/checkdb.c---419---doprintf(va_alist)
 bcopy ---src/tools/checkdb.c---318---		** while bcopy() doesn't.
 bcopy ---src/tools/checkdb.c---338---		** while bcopy() doesn't.
